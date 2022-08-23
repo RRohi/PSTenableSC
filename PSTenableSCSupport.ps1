@@ -1,34 +1,34 @@
-# Import Localization Data.
+# Import localization data.
 Import-LocalizedData -BindingVariable local -FileName PSTenableSCLocal -UICulture en-US
 
-#region Set Globally Accessible variables.
+#region set globally accessible variables.
 
-# Get Local DateTime Format.
+# Get local dateTime format.
 $Global:LocalDatePattern = ((Get-Culture).DateTimeFormat).ShortDatePattern + " " + (((Get-Culture)).DateTimeFormat).LongTimePattern
 
-# New Line.
+# New line.
 $Global:NewLine = [Environment]::NewLine
 
-#endregion Globally Accessible variables.
+#endregion
 
 Function ConvertFrom-EpochToNormal {
 <#
 .SYNOPSIS
 Epoc time conversion support function.
 .DESCRIPTION
-Convert Epoch time to readable format.
+Convert epoch time to readable format.
 .EXAMPLE
-Convert Epoch time to readable format.
+Convert epoch time to readable format.
 ConvertFrom-EpochToNormal -InputEpoch 1548752112
 .EXAMPLE
-Convert Epoch time to readable format in one of the available locales. Default is EE.
-ConvertFrom-EpochToNormal -InputEpoch 1548752112 -DateFormat LT
+Convert epoch time to readable format in one of the available locales.
+ConvertFrom-EpochToNormal -InputEpoch 1548752112
 .PARAMETER InputEpoch
-Enter Epoch time.
+Enter epoch time.
 .PARAMETER DateFormat
 Choose one of the available locales.
 .FUNCTIONALITY
-Converts Epoch time to readable format.
+Converts epoch time to readable format.
 #>
 [CmdletBinding()]
 Param(
@@ -36,7 +36,7 @@ Param(
     [Int]$InputEpoch
 )
 
-# Convert Epoch time to readable format, using Local Date Time Format.
+# Convert epoch time to readable format, using local date time format.
 Get-Date ([TimeZone]::CurrentTimeZone.ToLocalTime(([DateTime]'1.1.1970').AddSeconds($InputEpoch))) -Format "$LocalDatePattern"
 
 }
@@ -44,19 +44,19 @@ Get-Date ([TimeZone]::CurrentTimeZone.ToLocalTime(([DateTime]'1.1.1970').AddSeco
 Function ConvertFrom-NormalToEpoch {
 <#
 .SYNOPSIS
-Normal time to Epoch conversion support function.
+Normal time to epoch conversion support function.
 .DESCRIPTION
-Convert Normal time to Epoch.
+Convert normal time to epoch.
 .EXAMPLE
-Convert from Normal time to Epoch with current UTC time.
+Convert from normal time to epoch with current UTC time.
 ConvertFrom-NormalToEpoch
 .EXAMPLE
-Convert from Normal time to Epoch with supplied UTC time.
+Convert from normal time to epoch with supplied UTC time.
 ConvertFrom-NormalToEpoch -Date "01.01.2016"
 .PARAMETER InputEpoch
-Enter Time. It will be automatically converted to UTC.
+Enter time. It will be automatically converted to UTC.
 .FUNCTIONALITY
-Converts Normal time to Epoch.
+Converts normal time to epoch.
 #>
 [CmdletBinding()]
 Param(
@@ -64,7 +64,7 @@ Param(
     [DateTime]$Date = (Get-Date)
 )
 
-# Convert Normal time to Epoch.
+# Convert normal time to epoch.
 ([DateTimeOffset](Get-Date $Date -Format "$LocalDatePattern")).ToUnixTimeSeconds()
 
 }
@@ -72,24 +72,24 @@ Param(
 Function Write-SCLog {
 <#
 .SYNOPSIS
-Logging Support Function.
+Logging support function.
 .DESCRIPTION
 Shows verbose info when -Verbose switch is used, showing extensive info on executed cmdlets.
 .EXAMPLE
-A Simple example:
+A simple example:
 Write-SCLog -LogInfo "This is an important message"
 .EXAMPLE
-A Sample with localization functionality is use:
+An example with localization:
 Write-SCLog -LogInfo $local.GET_IP
 .EXAMPLE
-A Sample with localization functionality in use with a variable:
+An example with localization using a variable:
 Write-SCLog -LogInfo $($local.GET_IP $IP)
 .PARAMETER LogInfo
-Specify Log Info.
+Specify log info.
 .NOTES
 Output will be formatted as: "datetime - LogInfo"
 .FUNCTIONALITY
-Provides Verbose Information for debugging purposes.
+Provides verbose information for debugging purposes.
 #>
 [CmdletBinding()]
 Param(
@@ -97,28 +97,28 @@ Param(
     [String]$LogInfo
 )
 
-# Get Current DateTime and store it into a variable.
+# Get current datetime and store it into a variable.
 $DateStamp = Get-Date -Format "dd.MM.yyyy HH:mm:ss"
 
-# Output Verbose Log Text.
+# Output verbose log text.
 Write-Verbose "$DateStamp - $LogInfo"
 }
 
 Function Write-SCError {
 <#
 .SYNOPSIS
-Custom Error Notification Function.
+Custom error notification function.
 .DESCRIPTION
-Shows custom Error Messages.
+Shows custom error messages.
 .EXAMPLE
-A Simple example:
+A simple example:
 Write-SCError -Message "You messed up!" -RecommendedAction "Fix it."
 .PARAMETER Message
 Let user know what went wrong.
 .PARAMETER RecommendedAction
 Let user know how to fix the error.
 .FUNCTIONALITY
-Provides cleaner Error Information to user.
+Provides cleaner error information to user.
 #>
 [CmdletBinding()]
 Param(
